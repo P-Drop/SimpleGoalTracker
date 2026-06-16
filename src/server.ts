@@ -1,0 +1,14 @@
+import express from 'express';
+import cors from 'cors';
+import { getAllGoals } from './controllers/goalController.js';
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.get('/goals', getAllGoals);
+
+app.listen(3000, () => {
+  console.log('Servidor corriendo en http://localhost:3000');
+});
+
