@@ -4,7 +4,7 @@ import { goalRepository } from '../repositories/goalRepository.js';
 
 // Esquema de zod
 export const GoalSchema = z.object({
-  id: z.string().uuid(), 
+  id: z.string(), 
   title: z.string().min(1, "El título es obligatorio"),
   description: z.string().max(500),
   timeline: z.object({
@@ -42,6 +42,6 @@ export const createGoal = (req: Request, res: Response) => {
     }
     const newGoal = goalRepository.addOne(goal.data);
     return res.status(201).json(newGoal);
-    console.log(`La meta ${1}`)
+    console.log(`La meta ${1} ha sido añadida`)
 }
 
