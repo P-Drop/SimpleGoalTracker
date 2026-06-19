@@ -22,6 +22,9 @@ export const goalRepository = {
 
     // Modificar una meta
     updateOne: (id: string, updates: Partial<Goal>) => {
-        goals.find(g => g.id === id);
+        const goalToChange = goals.find(g => g.id === id);
+        if (!goalToChange) return null;
+        Object.assign(goalToChange, updates);
+        return goalToChange;
     }
 }
