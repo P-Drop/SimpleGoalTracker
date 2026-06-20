@@ -14,3 +14,20 @@ export function Mas(){
 
     )
 }
+
+export function DesplegableUp(){
+    return(
+        <svg width="15" height="15" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 0L12 6L10.6 7.4L6 2.8L1.4 7.4L0 6L6 0Z" fill="#BACAC5"/>
+        </svg>
+
+    )
+}
+
+export function DesplegableDown(){
+    return(
+        <svg width="15" height="15" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 7.4L0 1.4L1.4 0L6 4.6L10.6 0L12 1.4L6 7.4Z" fill="#BACAC5"/>
+        </svg>
+    )
+}
