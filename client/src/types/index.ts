@@ -1,18 +1,18 @@
 export type Goal = {
-  id: string
-  title: string
-  description: string
+  id: string;
+  title: string;
+  description: string;
   timeline: {
-    startDate: string
-    endDate: string
+    startDate: string;
+    endDate: string;
   }
-  isCompleted: boolean
+  isCompleted: boolean;
 }
 
 export type Task = {
-  id: string
-  linkedGoalId: string
-  title: string
-  startDate: string
-  isCompleted: boolean
+  id: string;
+  linkedGoalId: string;
+  title: string;
+  startDate: string;
+  isCompleted: boolean;
 }
