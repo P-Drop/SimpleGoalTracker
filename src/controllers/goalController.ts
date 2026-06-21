@@ -14,6 +14,8 @@ export const GoalSchema = z.object({
   isCompleted: z.boolean().default(false),
 });
 
+export const UpdateGoalSchema = GoalSchema.partial()
+
 export const getAllGoals = (req: Request, res: Response) => {
     console.log("Alguien pidió acceso a goals"); 
     const goals = goalRepository.findAll();
@@ -41,7 +43,23 @@ export const createGoal = (req: Request, res: Response) => {
         json({ errors: goal.error.format() });
     }
     const newGoal = goalRepository.addOne(goal.data);
+    console.log(`La meta ${goal.data.id} ha sido añadida`)
     return res.status(201).json(newGoal);
-    console.log(`La meta ${1} ha sido añadida`)
-}
+};
+
+// Modificar datos de una meta
+export const updateGoal = (req: Request, res: Response) => {
+    console.log("Alguien pidió modificar una meta");
+    const {id} = req.params;
+    const updates = UpdateGoalSchema.safeParse(req.body)
+    if (!updates.success) {
+        return res.status(400).json({ errors: updates.error.format() });
+    };
+    const updatedGoal = goalRepository.updateOne(id, updates.data);
+    if (!updatedGoal) {
+        return res.status(404).json({ message: "Meta no encontrada" });
+    };
+    console.log(`La meta ${id} ha sido modificada`);
+    return res.status(200).json(updatedGoal);
+};
 
