@@ -63,3 +63,18 @@ export const updateGoal = (req: Request, res: Response) => {
     return res.status(200).json(updatedGoal);
 };
 
+// Borrar meta
+export const deleteGoal = (req: Request, res: Response) => {
+    console.log("Alguien pidió borrar una meta")
+    const {id} = req.params;
+    const deletedGoal = goalRepository.deleteOne(id)
+    if (deletedGoal) {
+        return res.status(200).json(deletedGoal);
+    }
+    else {
+        return res.status(404).json({
+            message: "Meta no encontrada"
+        });
+    };
+};
+
