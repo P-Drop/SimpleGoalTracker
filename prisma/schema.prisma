@@ -1,13 +1,31 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model Goal {
+  id            String  @id
+  title         String  @unique
+  description   String
+  startDate     DateTime
+  endDate       DateTime
+  isCompleted   Boolean @default(false)
+  tasks         Task[]
+}
+
+model Task {
+  id            String  @id
+  title         String
+  description   String?
+  startDate     DateTime
+  isCompleted   Boolean @default(false)
+  linkedGoalId  String
+  goal          Goal    @relation(fields: [linkedGoalId], references: [id], onDelete: Cascade)
+
+  @@unique([title, linkedGoalId])
 }
