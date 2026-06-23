@@ -5,4 +5,6 @@ export default {
     moduleNameMapper: {
         '^(\\.{1,2}/.*)\\.js$': '$1',
     },
+    setupFiles: ['<rootDir>/tests/setup/env.ts'],
+    setupFilesAfterEnv: ['<rootDir>/tests/setup/teardown.ts']
 }
