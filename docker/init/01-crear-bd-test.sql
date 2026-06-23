@@ -1,0 +1,1 @@
+CREATE DATABASE goaltracker_test;
