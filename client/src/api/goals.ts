@@ -50,3 +50,12 @@ export async function updateGoal(data: Goal): Promise<Goal> {
     if(!res.ok) throw new Error (`Error: ${res.status}`)
     return res.json()
 }
+
+export async function deleteGoal(data: Goal): Promise<Goal> {
+    const res = await fetch(`/goals/${data.id}`,{
+        method: 'DELETE',
+        headers: {"Content-Type": "application/json"}
+    })
+    if(!res.ok) throw new Error(`Error: ${res.status}`)
+    return res.json()
+}

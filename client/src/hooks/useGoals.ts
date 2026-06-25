@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createGoal, fetchGoals, updateGoal } from "../api/goals";
+import { createGoal, deleteGoal, fetchGoals, updateGoal } from "../api/goals";
 import type { Goal } from "../types";
 
 export function useGoals(){
@@ -25,6 +25,15 @@ export function useUpdateGoal(){
         onSuccess: ()=> queryClient.invalidateQueries({queryKey:['goals']})
     }
     )
+    return mutation
+}
+
+export function useDeleteGoal(){
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: deleteGoal,
+        onSuccess: ()=> queryClient.invalidateQueries({queryKey:['goals']})
+    })
     return mutation
 }
 

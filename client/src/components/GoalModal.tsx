@@ -1,9 +1,13 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import type { Goal } from "../types"
 import { Cancel } from "../assets/svgs"
 import {motion} from 'framer-motion'
 
 const GoalModal = ({onClose, onGoalCreated}:{onClose: () => void, onGoalCreated: (goal: Goal) => void }) => {
+    const titleRef = useRef<HTMLInputElement>(null)
+    const descRef = useRef<HTMLTextAreaElement>(null)
+    const dateRef = useRef<HTMLInputElement>(null)
+    const submitRef = useRef<HTMLButtonElement>(null)
     const [form, setForm] = useState({
         title: '',
         description: '',
@@ -45,6 +49,13 @@ const GoalModal = ({onClose, onGoalCreated}:{onClose: () => void, onGoalCreated:
                     placeholder="Ej. Maraton 2026"
                     required
                     className="w-full bg-[#0D1A26] text-[#D4E4FA] px-3 py-3 rounded-xl outline-none border border-[#3C4A46] mb-3"
+                    ref={titleRef}
+                    onKeyDown={(e)=>{
+                        if(e.key ==='Enter' && !e.shiftKey ){
+                            e.preventDefault()
+                            descRef.current?.focus()
+                        }
+                    }}
                     
                 />
                 <span className="text-[15px] text-[#BACAC5] font-bold px-3 py-2">Descripcion *</span>
@@ -54,6 +65,13 @@ const GoalModal = ({onClose, onGoalCreated}:{onClose: () => void, onGoalCreated:
                     placeholder="Añade detalles sobre lo que quieres lograr..."
                     className="w-full bg-[#0D1A26] text-[#D4E4FA] px-3 py-2 rounded outline-none border border-[#3C4A46] mb-3"
                     rows={5}
+                    ref ={descRef}
+                    onKeyDown={(e)=>{
+                        if(e.key ==='Enter' && !e.shiftKey ){
+                            e.preventDefault()
+                            dateRef.current?.focus()
+                        }
+                    }}
                 />
 
             
@@ -64,9 +82,16 @@ const GoalModal = ({onClose, onGoalCreated}:{onClose: () => void, onGoalCreated:
                     onChange={(e) => setForm({ ...form, endDate: e.target.value })}
                     required
                     className="w-full bg-[#0D1A26] text-[#D4E4FA] px-3 py-2 rounded outline-none border border-[#3C4A46] mb-3"
+                    ref={dateRef}
+                    onKeyDown={(e)=>{
+                        if(e.key ==='Enter' && !e.shiftKey ){
+                            e.preventDefault()
+                            submitRef.current?.click()
+                        }
+                    }}
                 />
                 <div className="flex flex-row items-center justify-center">
-                    <motion.button whileHover={{scale: 0.9}} whileTap={{scale: 1.1}} type="submit" className="bg-[#2DD4BF] rounded-xl px-20 py-3 mt-4  mb-6 font-bold text-[#003731]">Guardar</motion.button>
+                    <motion.button whileHover={{scale: 0.9}} whileTap={{scale: 1.1}} type="submit" className="bg-[#2DD4BF] rounded-xl px-20 py-3 mt-4  mb-6 font-bold text-[#003731]" ref={submitRef}>Guardar</motion.button>
                 </div>
             </form>
         </div>
