@@ -10,8 +10,6 @@ function toApiGoal(row: GoalRow): Goal {
     return { ...rest, timeline: { startDate, endDate } }
 }
 
-
-
 export const goalRepository : Repository<Goal> = {
     findAll: async () => {
         const rows = await prisma.goal.findMany()

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
+import { z } from 'zod';
 import { GoalSchema, UpdateGoalSchema } from '../schemas/goalSchema.js';
 import { goalRepository } from '../repositories/goalRepository.js';
-
 
 // Modificación en todos los handlers-> Añádir asincronía
 
@@ -83,4 +83,3 @@ export const deleteGoal = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Error interno del servidor' })
     }
 };
-

@@ -1,5 +1,6 @@
 import z from "zod";
 
+// Esquema de zod
 export const GoalSchema = z.object({
   id: z.string(), 
   title: z.string().min(1, "El título es obligatorio"),
