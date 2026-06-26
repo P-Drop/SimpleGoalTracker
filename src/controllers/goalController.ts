@@ -37,7 +37,10 @@ export const createGoal = async (req: Request, res: Response) => {
     const goal = GoalSchema.safeParse(req.body);
 
     // Comprobar que el body contenga un json que se pueda conbvertir en Goal
-    if (!goal.success) return res.status(400).json({ errors: goal.error.format() });
+    if (!goal.success) {
+        console.log("La meta no cumple con el modelo de datos")
+        return res.status(400).json({ errors: goal.error.format()});
+    }
 
     try {
         const newGoal = await goalRepository.addOne(goal.data);
