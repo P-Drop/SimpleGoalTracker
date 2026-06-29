@@ -19,7 +19,7 @@ model Goal {
 }
 
 model Task {
-  id            String  @id
+  id            String  @id @default (uuid())
   title         String
   description   String?
   startDate     DateTime
