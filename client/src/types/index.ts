@@ -13,6 +13,14 @@ export type Task = {
   id: string;
   linkedGoalId: string;
   title: string;
+  description?: string;     
+  startDate: string;
+  isCompleted: boolean;
+};
+
+export type CreateTaskInput = {
+  title: string;
+  description?: string;
   startDate: string;
   isCompleted: boolean;
 }

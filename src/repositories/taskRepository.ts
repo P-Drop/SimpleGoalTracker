@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma.js';
-import { Task } from '../models/taskModel.js';
+import { Task, CreateTaskDTO } from '../models/taskModel.js';
 import type { Task as TaskRow } from '../../generated/prisma/client.js';
 import { Repository } from './repository.js';
 
@@ -23,7 +23,7 @@ export const taskRepository : Repository<Task> = {
         return row ? toApiTask(row) : undefined
     },
 
-    addOne: async (task: Task) => {
+    addOne: async (task: CreateTaskDTO) => {
     const row = await prisma.task.create({
         data: task 
     });
@@ -36,8 +36,11 @@ export const taskRepository : Repository<Task> = {
             const { goal, ...dataToUpdate } = updates as any;
             const row = await prisma.task.update({where: { id }, data: dataToUpdate})
             return toApiTask(row)
-        } catch (error) {
-            return null
+        } catch (error: any) {
+            // P2025 es el código Prisma cuando el registro no existe -> error 404
+            if (error?.code === 'P2025') return null;
+            // Para errores reales de conexión a DB -> error 500
+            throw error;
         }
     },
 
@@ -45,8 +48,11 @@ export const taskRepository : Repository<Task> = {
         try {
             const row = await prisma.task.delete({ where: { id }})
             return toApiTask(row)
-        } catch (error) {
-            return null
+        } catch (error: any) {
+            // P2025 es el código Prisma cuando el registro no existe -> error 404
+            if (error?.code === 'P2025') return null;
+            // Para errores reales de conexión a DB -> error 500
+            throw error;
         }
     },
 

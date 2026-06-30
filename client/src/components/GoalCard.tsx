@@ -1,17 +1,20 @@
-import { DesplegableDown} from "../assets/svgs"
-import type { Goal, Task } from "../types"
-import { useState } from "react"
+import { DesplegableDown, Trash} from "../assets/svgs"
+import type { Goal } from "../types"
+import { useState} from "react"
 import {motion, AnimatePresence} from 'framer-motion'
 import TaskList from "./TaskList"
+import { useDeleteGoal } from "../hooks/useGoals"
+import { useTasks } from "../hooks/useTasks"
 
 
 export function GoalCard({goal, onViewDetails}: {goal: Goal, onViewDetails: ()=> void}){
     const [isGoalExpanded, setIsGoalExpanded] = useState(false)
-    const [tasks, setTasks] = useState<Task[]>([
-  { id: "t1", linkedGoalId: goal.id, title: "Crear tipos básicos", startDate: "2026-06-02", isCompleted: true },
-  { id: "t2", linkedGoalId: goal.id, title: "Entender el repositorio", startDate: "2026-06-16", isCompleted: false },
-  { id: "t3", linkedGoalId: goal.id, title: "Hacer ejercicios", startDate: "2026-06-20", isCompleted: false }
-])
+    const deleteGoalMutation = useDeleteGoal()
+
+   const { data: allTasks } = useTasks()
+   const tasks = (allTasks ?? []).filter(t => t.linkedGoalId === goal.id)
+  
+
     const completed = tasks.filter(t => t.isCompleted).length
     const total = tasks.length
     const percentage = total > 0 ? (completed / total) * 100 : 0
@@ -31,7 +34,8 @@ export function GoalCard({goal, onViewDetails}: {goal: Goal, onViewDetails: ()=>
                     </div>
                 </div>
                 <div className="flex flex-col justify-between">
-                    <div className="pr-4 self-end">
+                    <div className="pr-4 self-end flex flex-row ">
+                        <motion.button className="text-[#bb3131ea] mr-4" onClick={(e)=> {e.stopPropagation(); deleteGoalMutation.mutate(goal)}}><Trash height={20} width={20} /></motion.button>
                         <motion.span animate={{rotate: isGoalExpanded ? 180 : 0}} transition={{duration: 0.2}} style={{display: "inline-block"}}> <DesplegableDown/></motion.span>
                     </div>
                     <motion.button whileTap={{scale: 1.1}} whileHover={{scale:0.9}} className="text-[#57F1DB] text-xs mb-2 pr-4 inline-block whitespace-nowrap" onClick={(e)=>{e.stopPropagation(); onViewDetails()}}>Ver detalles</motion.button>
@@ -46,7 +50,7 @@ export function GoalCard({goal, onViewDetails}: {goal: Goal, onViewDetails: ()=>
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden px-5 pb-0"
                     >
-                        <TaskList tasks={tasks} setTasks={setTasks} goalId={goal.id} />
+                        <TaskList tasks={tasks} goalId={goal.id} />
                     </motion.div>
                     )}
             </AnimatePresence>

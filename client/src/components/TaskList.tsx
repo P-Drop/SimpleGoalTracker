@@ -1,41 +1,24 @@
-import type {Task} from '../types/index'
+import type { Task } from '../types/index'
 import TaskItem from './TaskItem'
 import {Mas} from '../assets/svgs'
+import { useTaskModal } from "../hooks/useTaskModal"
+import { useUpdateTask } from '../hooks/useTasks'
 
 type TaskListProps = {
   tasks: Task[]
-  setTasks: (tasks: Task[]) => void
   goalId: string
 }
 
-const TaskList = ({tasks, setTasks, goalId}: TaskListProps) => {
-
-
-  const toggleCheck = (id: string)=>{
-    setTasks(tasks.map(t =>
-        t.id === id ? {...t, isCompleted: !t.isCompleted} : t
-    ))
+const TaskList = ({tasks, goalId}: TaskListProps) => {
+  const { openTaskModal } = useTaskModal()
+  const updateTaskMutation = useUpdateTask()
+  const toggleCheck = (task: Task)=>{
+    updateTaskMutation.mutate({
+      taskId: task.id,
+      data: {...task, isCompleted: !task.isCompleted}
+    })
   }
 
-  const updateTitle = (id: string, title: string) => {
-    setTasks(tasks.map(t =>
-      t.id === id ? { ...t, title } : t
-    ))
-  }
-
-
-  const addTask = () => {
-        const hoy = new Date().toISOString().split("T")[0]
-        const nueva: Task = {
-            id: crypto.randomUUID(),
-            linkedGoalId: goalId,
-            title: "Nueva Tarea",
-            startDate: hoy,
-            isCompleted: false,
-        }
-        setTasks([...tasks, nueva])
-    
-    }
 
   const goalTasks = tasks.filter(t => t.linkedGoalId === goalId)
 
@@ -44,9 +27,9 @@ const TaskList = ({tasks, setTasks, goalId}: TaskListProps) => {
       {goalTasks.length === 0 ? 
       (<p className='text-[#D4E4FA] text-lg font-bold'>No hay tareas aun</p> ): 
       (goalTasks.map(task => (
-        <TaskItem key={task.id} task={task} onToggle={toggleCheck} onUpdateTitle={updateTitle} />
+        <TaskItem key={task.id} task={task} onToggle={()=>toggleCheck(task)} />
       )))}
-      <button className="self-end flex flex-row items-center p-2 mb-5  rounded-full bg-[#57F1DB] font-bold text-[#003731] text-xs " onClick={addTask}><Mas height={15} width={15} /></button>
+      <button className="self-end flex flex-row items-center p-2 mb-5  rounded-full bg-[#57F1DB] font-bold text-[#003731] text-xs " onClick={() => openTaskModal(goalId)}><Mas height={15} width={15} /></button>
     </div>
   )
 }

@@ -2,7 +2,7 @@
 export interface Repository<T extends { id: string }> {
     findAll(): Promise<T[]>
     findOne(id: string): Promise<T | undefined>
-    addOne(item: T): Promise<T>
+    addOne(item: any): Promise<T> 
     updateOne(id: string, updates: Partial<T>): Promise<T | null>
     deleteOne(id: string): Promise<T | null>
 }

@@ -1,20 +1,7 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+import { GoalSchema, UpdateGoalSchema } from '../schemas/goalSchema.js';
 import { goalRepository } from '../repositories/goalRepository.js';
-
-// Esquema de zod
-export const GoalSchema = z.object({
-  id: z.string(), 
-  title: z.string().min(1, "El título es obligatorio"),
-  description: z.string().max(500),
-  timeline: z.object({
-    startDate: z.coerce.date(), 
-    endDate: z.coerce.date(),
-  }),
-  isCompleted: z.boolean().default(false),
-});
-
-export const UpdateGoalSchema = GoalSchema.partial()
 
 // Modificación en todos los handlers-> Añádir asincronía
 
@@ -50,7 +37,10 @@ export const createGoal = async (req: Request, res: Response) => {
     const goal = GoalSchema.safeParse(req.body);
 
     // Comprobar que el body contenga un json que se pueda conbvertir en Goal
-    if (!goal.success) return res.status(400).json({ errors: goal.error.format() });
+    if (!goal.success) {
+        console.log("La meta no cumple con el modelo de datos")
+        return res.status(400).json({ errors: goal.error.format()});
+    }
 
     try {
         const newGoal = await goalRepository.addOne(goal.data);
@@ -86,11 +76,10 @@ export const deleteGoal = async (req: Request, res: Response) => {
     console.log("Alguien pidió borrar una meta");
     try {
         const deletedGoal = await goalRepository.deleteOne(req.params.id);
-        if (!deleteGoal) return res.status(404).json({ message: 'Meta no encontrada' });
+        if (!deletedGoal) return res.status(404).json({ message: 'Meta no encontrada' });
         return res.status(200).json(deletedGoal);
     } catch (error) {
         console.error('Error al borrar la meta', error);
         res.status(500).json({ message: 'Error interno del servidor' })
     }
 };
-

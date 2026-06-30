@@ -10,8 +10,6 @@ function toApiGoal(row: GoalRow): Goal {
     return { ...rest, timeline: { startDate, endDate } }
 }
 
-
-
 export const goalRepository : Repository<Goal> = {
     findAll: async () => {
         const rows = await prisma.goal.findMany()
@@ -45,8 +43,11 @@ export const goalRepository : Repository<Goal> = {
         try {
             const row = await prisma.goal.update({ where: { id }, data })
             return toApiGoal(row)
-        } catch {
-            return null
+        } catch (error: any) {
+            // P2025 es el código Prisma cuando el registro no existe -> error 404
+            if (error?.code === 'P2025') return null;
+            // Para errores reales de conexión a DB -> error 500
+            throw error;
         }
     },
 
@@ -54,8 +55,11 @@ export const goalRepository : Repository<Goal> = {
         try {
             const row = await prisma.goal.delete({ where: { id }})
             return toApiGoal(row)
-        } catch {
-            return null
+        } catch (error: any) {
+            // P2025 es el código Prisma cuando el registro no existe -> error 404
+            if (error?.code === 'P2025') return null;
+            // Para errores reales de conexión a DB -> error 500
+            throw error;
         }
     },
 

@@ -12,7 +12,7 @@
  Lenguaje: Typescript.
  Runtime: Node.
  Frameworks: Express.
- Base de datos: MySQL.
+ Base de datos: PostgreSQL.
  Dependencias: Prisma, Zod.
 
 ## Frontend
